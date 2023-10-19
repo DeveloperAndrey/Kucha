@@ -1,10 +1,10 @@
 version: '3.4'
 services:
   backend:
-    container_name: hacaton_live_code
+    container_name: backend
     build:
-      context: Backend/
-    command: bash -c "python app.py"
+      context: backend/
+    #command: bash -c "python app.py"
     volumes:
       - ./backend/:/app
     ports:
@@ -35,8 +35,8 @@ services:
 
   celery:
     build:
-      context: Backend/
-    command: celery -A backend.celery worker -l info
+      context: backend/
+    command: celery -A app.celery worker -l info
     volumes:
       - ./gitdiff/:/usr/src/app/
       - ./gitdiff/tmp/:/app/tmp/

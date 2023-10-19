@@ -7,7 +7,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)  # Инициализируйте Flask-приложение для обработки CORS
-app.config["CELERY_BROKER_URL"] = "redis://localhost:6379"
+app.config["CELERY_BROKER_URL"] = "redis://redis:6379"
 
 celery = Celery(app.name, broker=app.config["CELERY_BROKER_URL"])
 celery.conf.update(app.config)

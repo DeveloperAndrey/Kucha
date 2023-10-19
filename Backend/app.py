@@ -2,10 +2,15 @@ from flask import Flask, request, jsonify
 import os
 from flask_cors import CORS  # Импортируйте библиотеку Flask-CORS
 import random
+from celery import Celery
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)  # Инициализируйте Flask-приложение для обработки CORS
+app.config["CELERY_BROKER_URL"] = "redis://localhost:6379"
+
+celery = Celery(app.name, broker=app.config["CELERY_BROKER_URL"])
+celery.conf.update(app.config)
 app.config['UPLOAD_FOLDER'] = 'uploads'  # Папка для сохранения загруженных файлов
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Максимальный размер файла (16MB)
 

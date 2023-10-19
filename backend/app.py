@@ -1,25 +1,30 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import os
+from random import randint
 from flask_cors import CORS  # Импортируйте библиотеку Flask-CORS
 import random
-from celery import Celery
+from json import loads
 from datetime import datetime
+from task import neural_network, REDIS_HOST, REDIS_PORT
+
 
 app = Flask(__name__)
-CORS(app)  # Инициализируйте Flask-приложение для обработки CORS
-app.config["CELERY_BROKER_URL"] = "redis://redis:6379"
-
-celery = Celery(app.name, broker=app.config["CELERY_BROKER_URL"])
-celery.conf.update(app.config)
-app.config['UPLOAD_FOLDER'] = 'uploads'  # Папка для сохранения загруженных файлов
-# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Максимальный размер файла (16MB)
-
-CORS(app)  # Инициализируйте Flask-приложение для обработки CORS
-app.config['UPLOAD_FOLDER'] = '../uploads'  # Папка для сохранения загруженных файлов
-# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Максимальный размер файла (16MB)
-
+app.config['UPLOAD_FOLDER'] = 'uploads'
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
+
+
+
+
+
+@app.route('/done', methods=['GET'])
+def neural_network_done():
+    neural_network()
+    return jsonify({'message': f'Celery start', 'status': 'done'})
+
+
+
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -32,17 +37,18 @@ def upload_file():
         return jsonify({'error': 'No selected file'})
 
     if file:
-        # Генерируем уникальное имя файла на основе времени загрузки и расширения файла
+
         current_time = datetime.now()
         filename = current_time.strftime('%Y%m%d%H%M%S%f') + os.path.splitext(file.filename)[1]
 
-        # Сохраняем файл с уникальным именем
+
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        # Генерируем случайное число (замените его на вашу логику)
+
         generated_number = random.randint(1, 100)
 
         return jsonify({'message': 'File uploaded successfully', 'generated_number': generated_number})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000,debug=True)
+

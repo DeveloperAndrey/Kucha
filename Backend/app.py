@@ -7,6 +7,10 @@ CORS(app)  # Инициализируйте Flask-приложение для о
 app.config['UPLOAD_FOLDER'] = 'uploads'  # Папка для сохранения загруженных файлов
 # app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Максимальный размер файла (16MB)
 
+CORS(app)  # Инициализируйте Flask-приложение для обработки CORS
+app.config['UPLOAD_FOLDER'] = '../uploads'  # Папка для сохранения загруженных файлов
+# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Максимальный размер файла (16MB)
+
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 

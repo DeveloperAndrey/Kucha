@@ -1,0 +1,31 @@
+version: '3.4'
+services:
+  backend:
+    container_name: hacaton_live_code
+    build:
+      context: Backend/
+    command: bash -c "python app.py"
+    volumes:
+      - ./backend/:/app
+    ports:
+      - 8000:8000
+    restart:
+      on-failure
+    networks:
+      - front_back
+
+  frontend:
+    build:
+      context: Frontend/
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+    restart:
+      on-failure
+    networks:
+      - front_back
+
+
+networks:
+  front_back:

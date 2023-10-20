@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 import redis
 
-from .tasks import make_nn_task
+from tasks import make_nn_task
 
 
 class NNView(APIView):

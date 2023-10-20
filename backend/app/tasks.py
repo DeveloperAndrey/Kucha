@@ -3,7 +3,7 @@ from time import sleep
 from random import randint
 import subprocess
 import shutil
-from json import loads
+from json import loads, dumps
 
 from django.core.mail import send_mail
 from django.conf import settings
@@ -22,6 +22,6 @@ def make_nn_task(redis_key, file):
         sleep(5)
 
         work_list = loads(redis_instance.get(f"work_{redis_key}"))
-        work_list.append([i])
-        redis_instance.set(f"work_{redis_key}", str(work_list))
+        work_list.append({"time": i, "v": i**2})
+        redis_instance.set(f"work_{redis_key}", dumps(work_list))
     redis_instance.set(f"status_{redis_key}", 'done')

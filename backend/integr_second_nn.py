@@ -5,14 +5,14 @@ import matplotlib.pyplot as plt
 import tensorflow.keras.applications as app
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.resnet import preprocess_input
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 
 from pathlib import Path
 
 
 
 IMG_HEIGHT, IMG_WIDTH = 600, 1000
-image_path = Path('./image_after_find_heap/')
+image_path = Path('./uploads/')
 
 prod_gen_train = ImageDataGenerator(preprocessing_function=preprocess_input) 
 prod_flow = prod_gen_train.flow_from_directory(
@@ -42,6 +42,7 @@ prod_flow = prod_gen_train.flow_from_directory(
 # reg.extra_layers()
 
 
-
-model = load_model('./resnet50-score10.11.hdf5')
-pred = model.predict(prod_flow)
+def neural_scale():
+    model = load_model('./resnet50-score10.11.hdf5')
+    pred = model.predict(prod_flow)
+    return pred
